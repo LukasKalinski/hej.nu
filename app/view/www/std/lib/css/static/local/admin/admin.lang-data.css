@@ -1,0 +1,10 @@
+table { width:[gecko=505|default=509]px; }
+td { padding-bottom:5px; }
+#language { width:100px; }
+#context { width:120px; }
+#topcat { width:120px; }
+#subcat { width:120px; }
+#entry { width:[gecko=505|default=509]px; }
+#frm_entry_value { display:block; margin-bottom:10px; }
+  #entry_value { width:[gecko=505|default=509]px; height:[gecko=36|default=36]px; overflow:hidden; }
+  #entry_desc, #entry_def { white-space:pre; }

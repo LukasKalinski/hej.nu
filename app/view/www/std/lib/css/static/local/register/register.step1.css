@@ -1,0 +1,8 @@
+#user_agreement {
+  height: [gecko=170|default=178]px;
+  width:[gecko=503|default=521]px;
+}
+
+b.UAG {
+  font-weight: 700;
+}

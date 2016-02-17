@@ -1,0 +1,52 @@
+#messages { width:521px; }
+
+#chead { margin-bottom:21px; }
+div.btnp { margin-bottom:15px; }
+
+#noMsgNotice { background:#DFD2A3; border:1px dashed #9F8D62; padding:5px; color:#936700; }
+
+#toc_top, #toc_btm { width:100%; text-align:center; margin-bottom:1px; }
+#toc_btm { margin-bottom:15px; }
+a.toc, a.toc_cur { margin-left:2px; margin-right:2px; color:#281100; font-size:10px; }
+a.toc { text-decoration:none; }
+a.toc_cur { font-weight:700; text-decoration:underline; }
+a.toc:hover { color:#8C3F0F; }
+a.toc { font-weight:400; }
+
+td.frm { width:100%; }
+#div_nmw { display:none; }
+#div_nmw1 { display:none; }
+
+#txta_nmw { width:[gecko=507|default=509]px; height:60px; }
+
+/* Confirmation window */
+#cw { position:absolute; visibility:hidden; right:[gecko=0|default=-1]px; z-index:10; width:auto; }
+  #cw_bg_l { background:url('[#GFX_ROOT]user/gb_cwbg_l.gif'); height:24px; width:15px; }
+  #cw_bg_c { background:url('[#GFX_ROOT]user/gb_cwbg_c.gif'); height:24px; }
+    #cw_msg { position:relative; top:3px; color:#4E4320; font-size:10px; }
+  #cw_bg_r { background:url('[#GFX_ROOT]user/gb_cwbg_r.gif'); height:24px; width:10px; }
+    #cw_btn { position:relative; top:1px; left:26px; }
+
+/* Reply window */
+#rw { position:absolute; visibility:hidden; right:[gecko=0|default=-1]px; width:auto; z-index:20; }
+  #rw_writearea { position:relative; background:url('[#GFX_ROOT]user/gb_rwtawrap.gif'); width:317px; height:78px; }
+    #rw_statiwrap { position:relative; top:5px; left:4px; width:309px; height:14px; overflow:hidden; }
+      #rw_stati { position:absolute; left:-309px; width:309px; }
+    #rw_txta { position:relative; top:-1px; left:3px; width:[gecko=307|default=311]px; height:[gecko=57|default=61]px; border:1px solid black; }
+  td.rw_btn { vertical-align:bottom; }
+    #rw_btnarea { background:url('[#GFX_ROOT]user/gb_rwbtnbg.gif'); height:22px; }
+      #rw_btnsend { position:relative; top:2px; }
+    #rw_btnareaend { [gecko=position:relative;top:2px;|default=] }
+
+/* Message box */
+div.msg { position:relative; width:521px; margin-bottom:15px; }
+  div.msg_head { height:17px; background:url('[#GFX_ROOT]user/gb_msghead.gif');  }
+    div.msg_from { position:absolute; left:58px; top:2px; }
+    div.msg_date { position:absolute; right:110px; top:2px; font-style:italic; }
+    img.msg_delbtn { position:absolute; left:2px; top:2px; }
+    img.msg_repbtn { position:absolute; right:48px; top:2px; }
+    img.msg_hisbtn { position:absolute; right:28px; top:2px; }
+    img.msg_gotbtn { position:absolute; right:11px; top:2px; }
+  div.msg_body { border-width:1px; min-height:54px; border-top-width:0px; padding:5px; width:[gecko=509|default=521]px; }
+    span.msg_photo { width:42px; height:54px; margin-right:5px; float:left; [msie=vertical-align:top;|default=] }
+    span.msg_content { vertical-align:top; }

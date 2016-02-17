@@ -1,0 +1,52 @@
+/* ### STATIC ### */
+
+body {
+  margin:0px;
+  font-size:10px;
+  font-family:verdana,sans-serif,helvetica;
+}
+
+h1,h2,h3,h4,h5,h6,p,ul { margin:0px; }
+li { list-style-position:inside; }
+
+/* Inline titles -> for example: <h6>Name:</h6> Foo */
+h6 { font-size:10px; display:inline; }
+
+/* !! NOTE: must be as is, if changing, check that reply window in guest book is ok. */
+#content { position:absolute; top:8px; left:8px; padding-bottom:8px; width:521px; }
+
+a:link      { font-family:verdana,sans-serif,helvetica; }
+a:visited   { font-family:verdana,sans-serif,helvetica; }
+a:active    { font-family:verdana,sans-serif,helvetica; }
+a:hover     { font-family:verdana,sans-serif,helvetica; }
+
+a.cmn:link,a.cmn:visited,a.cmn:active,a.cmn:hover { font-size:10px; }
+
+#chead { width:521px; height:29px; margin-bottom:10px; }
+#chead_title { width:[gecko=501|default=521]px; height:29px; padding:5px; letter-spacing:1px; font-size:13px; padding-left:6px; padding-top:4px; }
+#cfoot { width:521px; height:8px; margin-top:30px; }
+
+div.btnp { position:relative; width:521px; height:22px; margin-top:10px; }
+  div.btnp_l { position:absolute; top:2px; left:5px; }
+  div.btnp_r { position:absolute; top:2px; right:5px; }
+
+/*#cfoot { margin-top:50px; width:[gecko=519|default=521]px; text-align:right; padding:1px; font-size:9px; border-top-width:1px; } old */
+
+/* Boxes (max content width in: msie=509px, gecko=497px */
+div.box { margin-top:20px; }
+div.boxhead, div.boxh { font-size:12px; letter-spacing:1px; padding-left:5px; margin-bottom:3px; }
+div.boxcontent, div.boxc { border-width:1px; padding:5px; font-size:10px; }
+div.boxc h1 { font-size:11px; margin-bottom:10px; }
+div.boxc h2 { font-size:10px; }
+div.boxc p.h1 { margin-bottom:2px; margin-left:5px; background:green; }
+div.boxc p.h2 { margin-bottom:5px; }
+/*div.boxf { width:521px; height:22px; margin-top:10px; }*/
+div.boxc table.frm { border-style:none; margin:0px; margin-top:5px; }
+div.boxc tr.frm { border-style:none; }
+div.boxc td.frm { border-style:dotted; padding:0px; }
+
+/* Two-columns layout */
+table.cols2 { margin-bottom:5px; }
+tr.cols2 { vertical-align:top; }
+td.col2-1 { padding-right:5px; width:50%; }
+td.col2-2 { padding-left:5px; width:50%; }

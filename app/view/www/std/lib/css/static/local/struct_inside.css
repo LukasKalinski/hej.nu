@@ -1,0 +1,29 @@
+#h_ban          { position:absolute; top:5px; left:5px; border:1px solid black; height:80px; width:784px; }
+#h_pnl_L        { position:absolute; top:65px; left:5px; height:21px; width:8px; }
+#h_mwrapper     { position:absolute; top:41px; left:15px; height:45px; width:637px; overflow:hidden; }
+#h_menu         { position:absolute; height:45px; width:637px; top:24px; }
+#h_mpnl         { position:absolute; }
+#h_tc_list      { position:absolute; top:2px; left:20px; }
+#h_sc_list      { position:absolute; top:26px; left:20px; }
+  .sc_section   { position:absolute; display:none; }
+#pnl_sicn       { position:absolute; top:5px; left:662px; background:url('[#GFX_ROOT]struct_i/bg_staticons.gif'); width:[gecko=128|default=129]px;
+                  height:[gecko=35|default=36]px; padding-left:1px; padding-top:1px; }
+#h_pnl_R        { position:absolute; top:65px; left:653px; height:21px; width:137px; }
+#h_online_num   { position:absolute; top:70px; left:675px; width:90px; text-align:center; }
+#c_header       { position:absolute; top:97px; left:5px; height:41px; width:786px; }
+#secnav         { position:absolute; top:120px; left:14px; height:18px; width:526px; }
+  .secnav_list  { position:absolute; visibility:hidden; }
+#c_wrapper      { position:absolute; top:138px; left:5px; height:30px;}
+#c_footer       { position:absolute; bottom:39px; left:5px; height:4px; width:786px; }
+#ifr_main       { position:absolute; visibility:hidden; height:100%; width:553px; border-left:1px solid black; border-right:1px solid black; }
+#div_right      { position:absolute; left:565px; height:100%; width:219px; border-left-width:1px; border-right-width:1px; }
+#f_pnl          { position:absolute; bottom:5px; left:5px; }
+#dec002         { position:absolute; bottom:29px; left:5px; }
+#f_cmd          { position:absolute; bottom:10px; left:43px; width:[gecko=320|default=326]px; background:transparent; border:1px none white;
+                  margin-left:3px; margin-right:3px; }
+#f_stat         { position:absolute; bottom:11px; left:405px; width:[gecko=368|default=371]px; color:#FFD363; font-size:10px; padding-left:3px; }
+
+/* Admin stuff */
+#astatbar       { position:absolute; top:5px; left:5px; z-index:1; }
+  #abar_bg    { position:absolute; width:393px; height:16px; }
+  #abar_msg   { position:absolute; top:2px; left:12px; color:#E6B565; width:350px; height:10px; overflow:hidden; }

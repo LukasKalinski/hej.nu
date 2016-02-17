@@ -1,0 +1,16 @@
+<body>
+  <div id="content">
+    {* Add developer toolbar: *}
+    {*if #CYCOM_INDEVMODE}
+      <div id="dev_toolbar">
+        <a href="/_dev/request.php?r=tplreload&file={$ENV.D.cte.compiled_tpl_rpath}" class="dev">Recompile template</a><br />
+        {if $ENV.D.cte.compile_time != -1}
+          CTE compile @ {$ENV.D.cte.compile_time}s<br />
+        {/if}
+        Total @ {nreq@#PAGE_LOAD_TIME}s
+      </div>
+    {/if*}
+    {ph_isset &page_title}
+      <div id="chead"><div id="chead_title">{&page_title}</div></div>
+    {/ph_isset}
+</html>

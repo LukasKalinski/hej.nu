@@ -1,0 +1,41 @@
+/* ### DYNAMIC ### */
+
+select { border-style:solid; border-color:#7B4D1B; background:#F2DBA3; color:#7B4D1B; }
+
+/*## Titles for form fields. (Long names deprecated) */
+form .flabel, .frm_ftitle { color:#004800; font-weight:700; }
+form span.freq, .frm_freq { color:#A60000; }
+
+/* Form notes; div box */
+form div.note {  }
+  form div.noteh { color:#004800; font-weight:700; }
+  form div.notec { background:#D9E2AC; color:#365D14; border-style:dashed; border-color:#6E6A27; }
+
+/* Input:text, Input:password, Input:file, textarea */
+input.inp_t, input.inp_p, input.inp_f, textarea { border-color:#7B4D1B; border-style:solid; background:#F2DBA3; color:#81451F; }
+textarea {
+[msie=
+	scrollbar-3dlight-color:		#181818;
+	scrollbar-highlight-color:	#988168;
+	scrollbar-face-color:				#99754F;
+	scrollbar-shadow-color:			#7F674B;
+	scrollbar-darkshadow-color:	#181818;
+	scrollbar-arrow-color:			#181818;
+	scrollbar-track-color:			#A48B6B;
+|default=]
+}
+
+/*## Input:image */
+input.inp_i { cursor:[msie=hand|default=pointer]; }
+
+/* Radio */
+img.inp_r { cursor:[msie=hand|default=pointer]; }
+span.inp_r_label { cursor:[msie=hand|default=pointer]; }
+
+select.fail, input.fail, textarea.fail { border-color:#C50D1B; }
+select.hlight, input.hlight, textarea.hlight { background:#FFE198; } /* highlight */
+
+/* Table for rows of form inputs/selects. */
+div.frm_title { color:#433827; font-weight:bold; }
+table.frm { border-color:#A49675; border-style:solid; background:#C7BA8B; }
+td.frm { border-style:dashed; border-color:#A49675; }

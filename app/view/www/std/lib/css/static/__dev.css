@@ -1,0 +1,16 @@
+/* ### STATIC ### */
+/* - Always included if devmode is on. */
+
+#dev_toolbar { border:1px solid black; padding:5px; width:[gecko=509|default=521]px; background:white; margin-bottom:10px; }
+
+a.dev:link    { font-family:verdana,sans-serif,helvetica; text-decoration:none; color:#585759; font-weight:bold; }
+a.dev:visited { font-family:verdana,sans-serif,helvetica; text-decoration:none; color:#585759; font-weight:bold; }
+a.dev:active  { font-family:verdana,sans-serif,helvetica; text-decoration:none; color:#585759; font-weight:bold; }
+a.dev:hover   { font-family:verdana,sans-serif,helvetica; text-decoration:none; color:#789789; font-weight:bold; }
+
+/* Javascript controlled debug window. */
+#DEB_hid { display:none; }
+#DEB { font-size:10px; color:#795218; position:absolute; bottom:20px; left:8px; background:#FAF0AD; padding:8px; border:2px dashed #B11818; z-index:9999;
+       overflow:auto; height:200px; width:[gecko=505|default=521]px; }
+  span.DEB_prefix { color:#964518; font-weight:700; text-transform:uppercase; }
+  span.DEB_highlight { color:#546718; font-weight:bold; }

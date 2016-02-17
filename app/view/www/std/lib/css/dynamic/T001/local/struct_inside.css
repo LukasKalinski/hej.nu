@@ -1,0 +1,17 @@
+body
+{
+  background: #B8A37D;
+  margin: 0px;
+  padding: 0px;
+  font-size: 10px;
+  font-family: verdana,sans-serif,helvetica;
+  overflow:hidden;
+}
+
+.pnlban
+{
+  color: #000000;
+  font-size: 10px;
+  font-weight: 700;
+}
+#div_right { background:#E5D7A8;border-left-style:solid; border-left-color:black; border-right-style:solid; border-right-color:black; }

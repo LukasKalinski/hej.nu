@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document id="UAG">
+  <section>
+    <shead>Section 1</shead>
+    <scontent>
+      Section 1 contents...
+    </scontent>
+  </section>
+  <section>
+    <shead>Section 2</shead>
+    <scontent>
+      Section 2 contents...
+    </scontent>
+  </section>
+  <section>
+    <shead>Section 3</shead>
+    <scontent>
+      Section 3 contents...
+    </scontent>
+  </section>
+</document>

@@ -1,0 +1,15 @@
+<div id="bg_illustration">
+  <div id="content_island">
+    <div id="content_outer_header">
+      <div id="content_outer_title">
+        {$LANG.env.cycom_name}
+      </div>
+    </div>
+    <div id="content_outer_wrapper">
+      <div id="content_inner_wrapper" class="c_box">
+        <div id="header">
+          <div id="header_carea" class="pagehead_title">
+            {&title}
+          </div>
+          <img id="header_scounter" src="{#GFX_ROOT}reg_scounter{&step}.gif" alt="" />
+        </div>

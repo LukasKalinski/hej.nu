@@ -1,0 +1,11 @@
+#inp_fname        { width: 120px; }
+#inp_lname        { width: 160px; }
+#inp_ssn          { width: 140px; }
+
+#inp_email        { width: 170px; }
+#inp_phonenumber  { width: 120px; }
+#sel_citizenship  { width: 150px; }
+
+#inp_address      { width: 150px; }
+#inp_postcode     { width: 80px; }
+#inp_postcity     { width: 200px; }

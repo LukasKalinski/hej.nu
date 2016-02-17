@@ -1,0 +1,24 @@
+table { width:auto; }
+td { padding-bottom:5px; }
+
+form div.note { margin-top:5px; width:509px; }
+
+#at_holder { width: 220px; height:28px; }
+  #sel_action_wrap { width:100px; }
+    #sel_action { width:100px; }
+  #sel_target_wrap { width:100px; }
+    #sel_target { width:100px; }
+#availnamesview { display:block; }
+  #availnames { overflow:auto; height:70px; }
+#commentview { display:none; }
+  #cv_head { margin-bottom:2px; }
+#frm_edit { margin-top:10px; display:block; }
+  #eg_context { width:[gecko=160|default=144]px; padding-right:5px; }
+    #context { width:[gecko=160|default=144]px; }
+  #eg_topcat { width:[gecko=160|default=144]px; padding-right:5px; }
+    #topcat { width:[gecko=160|default=144]px; }
+  #eg_subcat { width:[gecko=160|default=144]px; padding-right:5px; }
+    #subcat { width:[gecko=160|default=144]px; }
+  #eg_entry, #entry { width:[gecko=505|default=509]px; }
+  #eg_comments { margin-top:10px; }
+    #comments { width:[gecko=505|default=513]px; height:[gecko=70|default=74]px; }

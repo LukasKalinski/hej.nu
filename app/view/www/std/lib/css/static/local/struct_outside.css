@@ -1,0 +1,74 @@
+/*## Content box wrapper. */
+#c_box_wrapper {
+  position: relative;
+  height: 298px;
+}
+
+#c_box_about, #c_box_reg, #c_box_login {
+  position:absolute;
+  width: [gecko=275|default=291]px;
+}
+
+/*## Content box for about-section. */
+#c_box_about {
+  top: 0px;
+  left: 0px;
+  height: [gecko=280|default=298]px;
+}
+
+/*## Content box for register-section. */
+#c_box_reg {
+  top: 0px;
+  right: 0px;
+  height: [gecko=125|default=141]px;
+}
+
+/*## Content box for login-section. */
+#c_box_login {
+  bottom: 0px;
+  right: 0px;
+  height: [gecko=125|default=141]px;
+}
+
+/*## Inner content title background. */
+div.content_inner_title_bg {
+  width: 274px;
+  height: 29px;
+  background: url('[#GFX_ROOT]ban_274x29.gif');
+  margin-bottom: 10px;
+}
+  /*## Inner content title holder. */
+  div.content_inner_title_holder {
+    width: [gecko=254|default=274]px;
+    height: [gecko=24|default=29]px;
+  }
+
+/*## Inner content footer background. */
+div.content_inner_footer_bg {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  width: 274px;
+  height: 22px;
+  background: url('[#GFX_ROOT]pnl_274x22.gif');
+}
+  /*## Inner content footer holder. */
+  div.content_inner_footer_holder {
+    width:[gecko=269|default=274]px;
+    text-align:right;
+    padding-right:5px;
+    padding-top: 2px;
+  }
+
+/*## About section. */
+#dec001 {
+  position:absolute;
+  bottom:34px;
+  right:10px;
+}
+
+/*## Login section. */
+#login_group             { width:263px; }
+td.login_group_left      { width:132px; }
+td.login_group_right     { width:131px; }
+input.login_group_field  { width:120px; }

@@ -1,0 +1,3 @@
+<div id="pagehead">
+  <div id="pagehead_content" class="pagehead_title">{&title}</div>
+</div>

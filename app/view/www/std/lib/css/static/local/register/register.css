@@ -1,0 +1,45 @@
+#content_inner_wrapper {
+  width: [gecko=521|default=537]px;
+}
+
+#header {
+  position: relative;
+  width: 521px;
+  height: 29px;
+  background: url('[#GFX_ROOT]ban_521x29.gif');
+  margin-bottom: 15px;
+}
+
+#header_carea {
+  width: 350px;
+  height: 29px;
+}
+
+#header_scounter {
+  position: absolute;
+  right: 15px;
+  top: 6px;
+}
+
+#footer {
+  position: relative;
+  width: [gecko=521|default=521]px;
+  height: [gecko=22|default=22]px;
+  background: url('[#GFX_ROOT]pnl_521x22.gif');
+  margin-top: 15px;
+}
+
+/* Footer content area left */
+#footer_carea_l {
+  position: absolute;
+  top: 2px;
+  left: 5px;
+}
+
+/* Footer content area (right) */
+#footer_carea_r {
+  position: absolute;
+  text-align: right;
+  top: 2px;
+  right: 5px;
+}

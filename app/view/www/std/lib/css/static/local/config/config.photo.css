@@ -1,0 +1,3 @@
+#inp_photo { [gecko=width:120px;|default=] }
+#curphoto_stat { height:[gecko=130|default=142]px; }
+  #curphoto { float:left; margin-right:5px; }

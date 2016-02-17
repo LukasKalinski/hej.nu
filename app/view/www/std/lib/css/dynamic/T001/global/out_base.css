@@ -1,0 +1,31 @@
+/* ### DYNAMIC ### */
+
+body { background:url('[#GFX_ROOT]out_bg_s.gif'); }
+
+div.scrollBox
+{
+  background: #D2BE8D;
+  border-top-style:solid;
+  border-top-color:#A79B75;
+  border-left-style:solid;
+  border-left-color:#A79B75;
+  border-bottom-style:solid;
+  border-bottom-color:#A79B75;
+}
+
+div.info_box {
+  background: #C7BA8B;
+  border-style:dashed;
+  border-color:#87754A;
+  color: #544517;
+}
+
+div.pagehead_title { color: #55461F; }
+
+/*## Content box. */
+div.c_box { background:#D8CA9B; border-style:solid; border-color:black; }
+
+#bg_illustration { background:url('[#GFX_ROOT]out_bg_c.gif'); }
+  #content_outer_header { background:url('[#GFX_ROOT]c_o_header.gif'); }
+    #content_outer_title { font-weight:700; color:#262626; }
+  #content_outer_wrapper { border-left-style:dashed; border-left-color:#7F694A; border-right-style:dashed; border-right-color:#7F694A; background:#BEA77D; }

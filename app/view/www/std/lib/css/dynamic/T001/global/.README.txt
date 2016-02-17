@@ -1,0 +1,4 @@
+This folder contains general theme related appearence settings. This means:
+
+1. Set no paddings, margins, borders or other dimension- and/or position-affecting properties in these files.
+2. No font styles or sizes either.

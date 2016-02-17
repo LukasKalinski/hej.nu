@@ -1,0 +1,1655 @@
+var CMLC, EH, Box;
+var CUSTOM_ELEM_PREPROPS = 'position:relative;display:block;border-width:1px;border-style:solid;padding:3px;height:20px;font-size:10px;margin-bottom:5px;'+
+                           'border-color:#000000;overflow:hidden';
+var CUSTOM_ELEM_AVAILPROPS = 'BGR*,FGR*,LTA*,BRD*,TXT*,MRG*';
+
+var APSC = new AArray(); // Available Property Group Shortcuts.
+  APSC.set('BGR', 'background-color');
+  APSC.set('FGR', 'color');
+  APSC.set('MRG', 'margin-left,margin-right,margin-top,margin-bottom');
+  APSC.set('LTA', 'display,position,top,left,width,height,padding,z-index');
+  APSC.set('BRD', 'border-width,border-style,border-color');
+  APSC.set('TXT', 'font-family,font-size,font-weight,font-style,text-decoration');
+
+window.onload = function()
+{
+  RGB.setupGUI('HEX');
+  
+  // Set up radio buttons for tag manager (tagmc = Tag Manager Create):
+  var tagmc_type = new Inp_Radio('frm_tagm_create', 'tagm_type');
+  tagmc_type.add('class', 1, 'rad_class');
+  tagmc_type.add('id', 0, 'rad_id');
+  
+  // Setup element handler.
+  EH = new CML_ElemHandler(document.getElementById('frm_cssProps'));
+  EH.addElem('a',       'class', 'a',       0,  'display:inline;font-weight:bold;text-decoration:none;font-size:10px;padding:0px;color:#3B4A44;'+
+                                                'background-color:transparent',
+                                                'BGR*,FGR*,TXT*,BRD*,background-color,padding');
+  EH.addElem('a',       'class', 'a:hover', 0,  'display:inline;font-weight:bold;text-decoration:none;font-size:10px;padding:0px;color:#8C3F0F;'+
+                                                'background-color:transparent',
+                                                'BGR*,FGR*,TXT*,BRD*,background-color,padding');
+  EH.addElem('a',       'class', 'user',    0,  'display:inline;font-weight:bold;text-decoration:none;font-size:10px;padding:0px;color:#3B4A44;'+
+                                                'background-color:transparent',
+                                                'BGR*,FGR*,TXT*,BRD*,background-color,padding');
+  EH.addElem('a',       'class', 'user:hover', 0,  'display:inline;font-weight:bold;text-decoration:none;font-size:10px;padding:0px;color:#8C3F0F;'+
+                                                'background-color:transparent',
+                                                'BGR*,FGR*,TXT*,BRD*,background-color,padding');
+  EH.addElem('big',     'class', 'big',     0,  '', null);
+  EH.addElem('div',     'class', 'body',    0,  'position:relative;display:block;overflow:hidden;width:517px;height:200px;padding:5px;background-color:#858454',
+                                                'height,BGR*,FGR*,TXT*,padding');
+  EH.addElem('span',    'class', 'b',       0,  'font-weight:bold', null);
+  EH.addElem('span',    'class', 'i',       0,  'font-style:italic', null);
+  EH.addElem('span',    'class', 's',       0,  'text-decoration:line-through', null);
+  EH.addElem('span',    'class', 'u',       0,  'text-decoration:underline', null);
+  EH.addElem('div',     'class', 'center',  0,  'text-align:center', null);
+  EH.addElem('div',     'class', 'right',   0,  'text-align:right', null);
+  EH.addElem('hr',      'class', 'hr',      1,  'background-color:#000000;border-style:none;height:1px;width:300px;', 'background-color,width,height');
+  EH.addElem('br',      'class', 'br',      1,  '', null);
+  EH.addElem('div',     'class', 'test',    0,  CUSTOM_ELEM_PREPROPS+';background-color:#567546;height:40px', CUSTOM_ELEM_AVAILPROPS);
+  EH.addElem('div',     'id',    'id1',     0,  'display:block;border-width:1px;border-style:solid;padding:3px;height:100px;font-size:10px;left:10px;'+
+                                                'border-color:#000000;position:absolute;width:100px;top:50px', CUSTOM_ELEM_AVAILPROPS);
+  EH.addElem('div',     'id',    'id2',     0,  'display:block;border-width:1px;border-style:solid;padding:3px;height:100px;font-size:10px;top:50px;'+
+                                                'border-color:#000000;position:absolute;background-color:#789789;width:200px;left:120px;', CUSTOM_ELEM_AVAILPROPS);
+  EH.updateGUI('test');
+  
+  // Setup compiler sub-classes:
+  Box = new BoxMover();
+  
+  // Box Object: Setup event listeners.
+  with(B.ie ? document.body : window)
+  {
+    onmousemove = function(e)
+    {
+      var Ev = new Event(e);
+      Ev.cancelBubble = true;
+      Box.moveTo(Ev.pageOffsetX, Ev.pageOffsetY);
+    };
+    onmousedown = function()
+    {
+      Box.resetEndMove();
+    };
+    onmouseup = function(e)
+    {
+      var Ev = new Event(e);
+      Ev.cancelBubble = true;
+      Box.endMove();
+    };
+  }
+  
+  // Setup and run compiler preview.
+  CMLC = new CML_Compiler(document.getElementById('pe_data'), document.getElementById('pe_prev'));
+  CMLC.updatePreview();
+};
+
+function pcpl(Ev) { if(Ev == null || Ev.ref.keyCode != KEY_F5) CMLC.updatePreview(); }
+
+function RGB_Map()
+{
+  this.scan = false;
+  
+  this.sliderSizeX = 147;
+  this.mapSizeX = 150;
+  this.mapSizeY = 152;
+  this.mapOffsetX = 5;
+  this.mapOffsetY = 5;
+  this.evX = 0;
+  this.evY = 0;
+    
+  this.HEX = '007878'; // Predefined color, maybe random in the future?
+  this.R = 0;
+  this.G = 0;
+  this.B = 0;
+  this.whiteness = 0;
+  this.S = 0;
+  this.V = 0;
+  this.H = 0;
+  
+  this.logEvent = function(ev)
+  {
+    ev = new Event(ev);
+    this.evX = ev.objPosX;
+    this.evY = ev.objPosY;
+  };
+  
+  this.setupGUI = function(c)
+  {
+    switch(c)
+    {
+      case 'RGB':
+        this.HEXfromRGB();
+        this.HSVfromRGB();
+        break;
+      case 'HSV':
+        this.RGBfromHSV();
+        this.HEXfromRGB();
+        break;
+      case 'HEX':
+        this.RGBfromHEX();
+        this.HSVfromRGB();
+        break;
+    }
+    this.refreshGUI();
+  };
+  
+  this.refreshGUI = function()
+  {
+    document.getElementById('rgbPreview').style.background = "#"+this.HEX;
+    ref = document.getElementById('frmColorMap');
+    ref.H.value = Math.round(this.H);
+    ref.S.value = Math.round(this.S * 100);
+    ref.V.value = Math.round(this.V * 100);
+    ref.R.value = this.R;
+    ref.G.value = this.G;
+    ref.B.value = this.B;
+    ref.HEX.value = this.HEX;
+    ref.cHEX.value = "#" + this.HEX;
+    
+    var hPos = Math.min(Math.max(this.mapSizeX * (this.H / 360) + this.mapOffsetX, 0), this.mapSizeX + this.mapOffsetX);
+    var vPos = Math.min(Math.max(this.mapSizeY * (1 - this.V) + this.mapOffsetY, 0), this.mapSizeY + this.mapOffsetY);
+    var sPos = Math.min(Math.max((this.S * this.sliderSizeX) - 2, 1), 144);
+    var wPos = Math.min(Math.max((this.whiteness * this.sliderSizeX) - 2, 1), 144);
+    
+    css_setPos('cur_h', hPos-3, null);
+    css_setPos('cur_v', null, vPos-3);
+    css_setPos('cur_map', hPos-5, null);
+    css_setPos('cur_map', null, vPos-5);
+    css_setPos('cur_s', sPos, null);
+    css_setPos('cur_w', wPos, null);
+  };
+  
+  this.scanNumericChange = function(inpObj)
+  {
+    var varVal = inpObj.value;
+    var varMax, varSys;
+    var doDiv = false;
+    
+    switch(inpObj.name)
+    {
+      case 'R':
+      case 'G':
+      case 'B':
+        varMax = 255;
+        varSys = 'RGB';
+        break;
+      case 'H':
+        varMax = 360;
+        varSys = 'HSV';
+        break;
+      case 'S':
+      case 'V':
+        varMax = 100;
+        varSys = 'HSV';
+        doDiv = true;
+        break;
+      case 'HEX':
+        varSys = 'HEX';
+        break;
+    }
+    
+    if(varVal.length > 0)
+    {
+      var hexValidated = true;
+      if(varSys == 'HEX')
+      {
+        if(inpObj.value.match(/[0-9a-f]{6}/gi)) { this.HEX = inpObj.value; }
+        else { hexValidated = false; }
+      }
+      else
+      {
+        varVal = varVal.replace(/[^0-9]/gi, "");
+        if(isNaN(varVal)) { varVal = 0; }
+        varVal = Math.min(varVal, varMax);
+        if(doDiv) { varVal = varVal / varMax }
+        eval("this." + inpObj.name + '=' + varVal);
+      }
+      if(hexValidated) { this.setupGUI(varSys); }
+    }
+  };
+  
+  this.startGraphicMove = function(ev, obj)
+  {
+    this.scan = true;
+    this.scanGraphicMove(ev, obj);
+  };
+  
+  this.scanGraphicMove = function(ev, obj)
+  {
+    if(this.scan)
+    {
+      this.logEvent(ev);
+      switch(obj)
+      {
+        case 'map':
+          this.V = Math.min(Math.max(1 - ((this.evY - this.mapOffsetY) / (this.mapSizeY)), 0), 1);
+          this.H = Math.min(Math.max(360 * ((this.evX - this.mapOffsetX) / this.mapSizeX), 0), 360);
+          break;
+        case 'saturation':
+          this.S = Math.min(Math.max(this.evX / this.sliderSizeX, 0), 1);
+          break;
+        case 'whiteness':
+          this.whiteness = this.evX / this.sliderSizeX;
+          break;
+      }
+      this.setupGUI('HSV');
+    }
+  };
+  
+  this.stopGraphicMove = function()
+  {
+    if(this.scan) { document.getElementById('frmColorMap').HEX.focus(); } // Just to prevent this ugly select-all thing.
+    this.scan = false;
+  };
+  
+  this.HEXfromRGB = function()
+  {
+    function hex(n)
+    {
+      n = n.toString(16);
+      if(n.length < 2) { n = "0" + n; }
+      return n;
+    }
+    this.HEX = hex(this.R) + hex(this.G) + hex(this.B);
+    this.HEX = this.HEX.toUpperCase();
+  };
+  
+  this.RGBfromHEX = function()
+  {
+    this.R = parseInt(this.HEX.substr(0,2), 16);
+    this.G = parseInt(this.HEX.substr(2,2), 16);
+    this.B = parseInt(this.HEX.substr(4,2), 16);
+  };
+  
+  this.HSVfromRGB = function()
+  {
+    var cMin = Math.min(Math.min(this.R, this.G), this.B);
+    var cMax = Math.max(Math.max(this.R, this.G), this.B);
+    
+    this.S = (cMax != 0 ? ((cMax - cMin) / cMax) : 0);
+    this.whiteness = 0;
+    this.V = cMax / 255;
+    
+    if(this.R == this.G && this.G == this.B) { this.H = 0; }
+    else
+    {
+      var delta = cMax - cMin;
+      switch(cMax)
+      {
+        case this.R: this.H = (this.G - this.B) / delta; break;
+        case this.G: this.H = 2 + ((this.B - this.R) / delta); break;
+        case this.B: this.H = 4 + ((this.R - this.G) / delta); break;
+      }
+      this.H = this.H * 60;
+      if(this.H < 0) { this.H = this.H + 360; }
+    }
+  };
+  
+  this.RGBfromHSV = function()
+  {
+    var hue = this.H;
+    if(hue == 360) { hue = 0; }
+    hue = hue / 60;
+    var hueSector = Math.floor(hue);
+    var hueDelta = hue - hueSector;
+    var cmi = this.whiteness + (this.V * (1 - this.S));
+    var cma = this.whiteness + (this.V);
+    var dec = this.whiteness + (this.V * (1 - (this.S * hueDelta)));
+    var inc = this.whiteness + (this.V * (1 - (this.S * (1 - hueDelta))));
+    
+    switch(hueSector)
+    {
+      case 0:  this.R = cma; this.G = inc; this.B = cmi; break;
+      case 1:  this.R = dec; this.G = cma; this.B = cmi; break;
+      case 2:  this.R = cmi; this.G = cma; this.B = inc; break;
+      case 3:  this.R = cmi; this.G = dec; this.B = cma; break;
+      case 4:  this.R = inc; this.G = cmi; this.B = cma; break;
+      case 5:  this.R = cma; this.G = cmi; this.B = dec; break;
+    }
+    
+    this.R = Math.max(Math.min(Math.round(this.R * 255), 255), 0);
+    this.G = Math.max(Math.min(Math.round(this.G * 255), 255), 0);
+    this.B = Math.max(Math.min(Math.round(this.B * 255), 255), 0);
+  };
+  
+  this.copyHEX = function()
+  {
+    if(B.ie)
+    {
+      oText = document.getElementById('frmColorMap').cHEX.createTextRange();
+      oText.execCommand("Copy");
+    }
+    else
+    {
+      alert("browser blaha..");
+    }
+  };
+}
+
+var RGB = new RGB_Map();
+
+
+/**
+ * Presentation compilator
+ * 
+ * @begin 2005-08-07
+ *
+ */
+
+function tagm_go(m)
+{
+  var tagm_f = document.getElementById('frm_tagm_create');
+  switch(m)
+  {
+    case 'tag_manager':
+      document.getElementById('tagm_create').style.display = "none";
+      document.getElementById('tagm_manage').style.display = "block";
+      tagm_f.reset();
+      break;
+    case 'create_elem':
+      document.getElementById('tagm_manage').style.display = "none";
+      document.getElementById('tagm_create').style.display = "block";
+      tagm_f.tagm_name.focus();
+      break;
+  }
+}
+
+function tagm_togglepg(Caller)
+{
+  var label_t='_title', label_b='_body';
+  var c_body = document.getElementById(Caller.id.substring(0,Caller.id.length-label_t.length+1) + label_b);
+  with(c_body.style)
+  {
+    if(display == 'none' || display.length == 0) { display = 'block'; Caller.className = 'csspg_t1'; }
+    else { display = 'none'; Caller.className = 'csspg_t0'; }
+  }
+}
+
+var RE = new Array();
+RE.numSignHexColor = /\#([a-f0-9]{6})/i;
+RE.hexColor = /[a-f0-9]{6}/i;
+RE.units = /([0-9]+)px/i;
+RE.elemName = /^[a-z_][a-z0-9_]*$/i;
+RE.endTag =   /^\/([a-z_][a-z0-9_]*)$/i;
+RE.emptyTag = /^([a-z_][a-z0-9_]*).*\/$/i;
+
+/**
+ * object CML_Elem(string, string, string, string, bool, AArray)
+ * Sub-class for CML_ElemHandler-class.
+ * (CML = Custom Markup Language)
+ */
+var CSS_RULE_PREFIX = 'CMLR_';
+function CML_Elem(eType, eName, eCss, html_eName, isEmpty, availProps)
+{
+  this.touched      = false;          // @var bool      - Shows whether the object has been touched or if it's "fresh".
+  this.type         = eType;          // @var string    - Element name.
+  this.name         = eName;          // @var string    - Element type (id or class).
+  this.cssStr       = eCss;           // @var string    - Element CSS property string.
+  this.cssProps     = new AArray();   // @var AArray    - Element CSS property associative array (AArray).
+  this.cssUpdated   = false;          // @var bool      - Indicator for determining whether css has been updated since last property change or not.
+  this.isEmpty      = isEmpty;        // @var bool      - Empty element or not: <elem /> or <elem> ... </elem>
+  this.htmlElemName = html_eName;     // @var ELEM      - HTML element for representing the CML element.
+  
+  this.availProps = availProps;       // @var AArray  - Available (changeable) properties.
+  this.availPropsChanged = false;     // @var bool    - Keeps track of whether the available properties has been updated or not.
+  
+  this.cssRuleIndex = -1; // Not used in IE...
+  
+  /**
+   * string getCssProp(string, bool)
+   */
+  this.getCssProp = function(nam, rmSymbols)
+  {
+    if(this.cssProps.isset(nam) && this.cssProps.get(nam) != null)
+      return (rmSymbols ? this.cssProps.get(nam).replace(/px|\#|%|transparent/, '') : this.cssProps.get(nam));
+    else
+      return null;
+  };
+  
+  /**
+   * void setPropsAvail(string, bool)
+   * Takes a coma-separated (,) string of css properties that will be set to the value of the avail-variable.
+   *
+   * @param string propsStr
+   * @param bool avail
+   */
+  this.setPropsAvail = function(propsStr, avail)
+  {
+    var props = propsStr.split(',');
+    for(var spa_i=0; spa_i<props.length; spa_i++)
+      this.availProps.set(props[spa_i], avail);
+  };
+  
+  /**
+   * void setCssProp(string, string [, bool])
+   * Sets or changes a css property.
+   */
+  this.setCssProp = function(pNam, pVal, update)
+  {
+    this.touched = true;
+    this.cssUpdated = false;
+    
+    // Update available properties.
+    if(this.getCssProp(pNam) != pVal)
+    {
+      // Switch availability of dependent properties.
+      switch(pNam)
+      {
+        case 'position':
+          if(pVal == 'relative' || pVal == 'static')
+            this.setPropsAvail('top,left', false);
+          else // position:absolute
+          {
+            if(this.getCssProp('top') == null)
+              this.setCssProp('top', '0px');
+            if(this.getCssProp('left') == null)
+              this.setCssProp('left', '0px');
+            
+            this.setPropsAvail('top,left', true);
+          }
+          break;
+        
+        case 'display':
+          if(pVal == 'inline')
+            this.setPropsAvail('padding,width,height,' + APSC.get('MRG'), false); // MGR = all margins.
+          else if(pVal == 'block')
+            this.setPropsAvail('padding,width,height,' + APSC.get('MRG'), true);
+          break;
+      }
+      this.availPropsChanged = true;
+    }
+    else
+    {
+      this.availPropsChanged = false;
+    }
+    
+    this.cssProps.set(pNam, pVal);
+    
+    if(update)
+      this.updateCss();
+  };
+  
+  /**
+   * string mcss(string, string)
+   * Shortcut function: Merges css-property name with its value.
+   *
+   * @param string pNam
+   * @param string pVal
+   */
+  this.mcss = function(pNam, pVal) { return pNam + ':' + pVal + ';'; };
+  
+  /**
+   * mixed buildCssStr(AArray)
+   *   Case 1: Updates css string if it's not up to date. Returns true if any CSS-rules has been applied and false otherways.
+   *   Case 2: Builds a css string based on the src input and returns it (see param specs). Note that the build will still 
+   *           be based on the current element (this).
+   * String is built on the following format (note the lack of a ; at the end):
+   *   foo:val;bar:val
+   *
+   * @param AArray src          # Setting this makes the function compile css from an external source (src) and return the result.
+   * @param bool isOverwritten  # True means that a foreign object's (right now this means a id-object's) css properties has overwritten the current ones.
+   */
+  this.buildCssStr = function(srcProps, isOverwritten)
+  {
+    var pVal, str = '';
+    var width = null, height = null, padding = null, borderWidth = null;
+    var wOffset = 0, hOffset = 0;
+    var AA;
+    while(AA = srcProps.foreach('n','v'))
+    {
+      pNam = AA.n;
+      pVal = AA.v;
+      
+      // Continue loop if:
+      //   1. The current property isn't available for some reason AND this objects property list isn't overwritten.
+      //   2. The property value is null (means it should be considered deleted).
+      if((this.availProps.get(pNam) === false && !isOverwritten) || pVal == null)
+        continue;
+      
+      if(pNam.length && pVal.length)
+      {
+        // ## Collect relevant property values for the box dimensions (if not msie box model).
+        if(B.ie)
+        {
+          str += this.mcss(pNam, pVal);
+        }
+        else // Browser case: Gecko/Firefox right now...
+        {
+          switch(pNam)
+          {
+            case 'width':
+              width = parseInt(pVal);
+              break;
+            case 'height':
+              height = parseInt(pVal);
+              break;
+            
+            case 'padding':
+              padding = parseInt(pVal);
+              wOffset += (padding*2);
+              hOffset += (padding*2);
+              str += this.mcss(pNam, pVal);
+              break;
+            
+            case 'border-width':
+              // If border-style is 'none' or is undefined then border-width won't apply... the inverse case gives:
+              if(srcProps.isset('border-style') && srcProps.get('border-style') != 'none')
+              {
+                borderWidth = parseInt(pVal)
+                wOffset += (borderWidth*2);
+                hOffset += (borderWidth*2);
+                str += this.mcss(pNam, pVal);
+              }
+              break;
+            
+            default:
+              str += this.mcss(pNam, pVal);
+          }
+        }
+      }
+    }
+    
+    // ## Resize width and height according to the IE-way (which means: absolute width and height, independent of padding, margins etc).
+    if(!B.ie)
+    {
+      // Now we'll do something about the case when (padding + border-width) > (height and width respectively)...
+      // Priority is: height > border-width > padding
+      var addCssProps = '';
+      var diff;
+      
+      if(width != null)
+      {
+        // Buffers: 'h' means horizontal (left and right) and 'v' means vertical (top and bottom).
+        var hPadding, hBorderWidth;
+        
+        var width = diff = width - wOffset;
+        if(diff <= 0)
+        {
+          // Trim padding.
+          hPadding = diff = 2*padding + diff; // diff is negative here.
+          
+          // Check if diff became zero or negative.
+          if(diff <= 0)
+          {
+            // Trim border.
+            hBorderWidth = Math.max(0, 2*borderWidth + diff); // diff is negative here.
+            addCssProps += this.mcss('border-left-width', Math.ceil(hBorderWidth/2) + 'px');
+            addCssProps += this.mcss('border-right-width', Math.floor(hBorderWidth/2) + 'px');
+            hPadding = 0;
+          }
+          
+          // Trim the box systematically using the following priority:
+          //   padding-bottom > padding-top > border-bottom-width > border-top-width
+          addCssProps += this.mcss('padding-left', Math.ceil(hPadding/2) + 'px');
+          addCssProps += this.mcss('padding-right', Math.floor(hPadding/2) + 'px');
+          width = 0;
+        }
+        
+        str += 'width:' + width + 'px;';
+      }
+      
+      // Repeat the same procedure for height.
+      if(height != null)
+      {
+        // Buffers: 'h' means horizontal (left and right) and 'v' means vertical (top and bottom).
+        var vPadding, vBorderWidth;
+        
+        var height = diff = height - hOffset;
+        if(diff <= 0)
+        {
+          // Trim padding.
+          vPadding = diff = 2*padding + diff; // diff is negative here.
+          
+          // Check if diff became zero or negative.
+          if(diff <= 0)
+          {
+            // Trim border.
+            vBorderWidth = Math.max(0, 2*borderWidth + diff); // diff is negative here.
+            addCssProps += this.mcss('border-top-width', Math.ceil(vBorderWidth/2) + 'px');
+            addCssProps += this.mcss('border-bottom-width', Math.floor(vBorderWidth/2) + 'px');
+            vPadding = 0;
+          }
+          
+          // Trim the box systematically using the following priority:
+          //   padding-bottom > padding-top > border-bottom-width > border-top-width
+          addCssProps += this.mcss('padding-top', Math.ceil(vPadding/2) + 'px');
+          addCssProps += this.mcss('padding-bottom', Math.floor(vPadding/2) + 'px');
+          height = 0;
+        }
+        
+        str += 'height:' + height + 'px;';
+      }
+      
+      str += addCssProps;
+    }
+    
+    if(str.length > 0)
+    {
+      this.cssUpdated = true; // ... Why under this condition?
+      str = str.substr(0, str.length-1); // Remove last ;.
+//      if(!isOverwritten)
+//        __DEB.println('$0 has css str=$1',new Array(this.name,str),false);
+    }
+    
+    return str;
+  };
+  
+  this.updateCss = function()
+  {
+    if(!this.cssUpdated)
+      this.cssStr = this.buildCssStr(this.cssProps, false);
+    return this.cssUpdated;
+  };
+  
+  /**
+   * string getCssStr()
+   * Returns CSS string.
+   */
+  this.getCssStr = function()
+  {
+    this.updateCss();
+    return this.cssStr;
+  };
+  
+  /**
+   * mixed compileStartElem(string, AArray)
+   * Returns (if type != id) a ready to use HTML start-element containing a:
+   *    1. AArray not null: CSS string inside a style="".
+   *    2. AArray is null:  Element name as class name inside a class="".
+   * ...otherways false.
+   *
+   * @param string attrs     # Attribute string with a leading space character.
+   * @param AArray cssProps  # Set this if we want to hardcode the css string into the tag (usually used for preview).
+   */
+  this.compileStartElem = function(attrs, cssProps)
+  {
+    if(this.type == 'class')
+    {
+      var joinedProps, isOverwritten;
+      var s = '<';
+      s += this.htmlElemName;
+      s += (attrs != null && attrs.length > 0 ? attrs : '');
+      if(typeof(cssProps) == 'object' && cssProps != null)
+      {
+        if(cssProps[1] != null)
+        {
+          joinedProps = new ObjClone(cssProps[0]);
+          var AA;
+          while((AA = cssProps[1].foreach('k','v')) !== false)
+            if(AA.v != null)
+              joinedProps.set(AA.k, AA.v, true);
+          isOverwritten = true;
+        }
+        else
+        {
+          joinedProps = cssProps[0];
+          isOverwritten = false;
+        }
+        s += ' style="' + this.buildCssStr(joinedProps, isOverwritten) + '"';
+      }
+      else
+      {
+        s += (this.updateCss() ? ' class="' + CSS_RULE_PREFIX + this.name + '"' : '');
+      }
+      s += (this.isEmpty ? ' /' : '');
+      s += '>';
+      
+      return s;
+    }
+    else
+    {
+      return false;
+    }
+  };
+  
+  /**
+   * mixed compileEndElem()
+   * Returns ready to use HTML end-element if the element isn't an "empty element", otherways false.
+   */
+  this.compileEndElem = function()
+  {
+//    __DEB.show('Elem "$0" has type=$1 and is empty? $2', new Array(this.name, this.type, this.isEmpty)); // DETECTED: this.type is empty; why?
+    if(!this.isEmpty && this.type == 'class') return '</' + this.htmlElemName + '>';
+    else return false;
+  };
+  
+  
+  // ## On create (constructor functionality):
+  
+  // Import pre-defined css properties into property array.
+  var pToks = this.cssStr.split(';');
+  var pNam, pVal;
+  for(var i=0, ii=pToks.length; i<ii; i++)
+  {
+    pNam = pToks[i].substr(0,pToks[i].indexOf(':'));
+    pVal = pToks[i].substr(pNam.length+1);
+    
+    this.setCssProp(pNam, pVal, false);
+  }
+  
+  return this;
+}
+
+function CML_FProp(nam,BlockElem,InpElem)
+{
+  this.name = nam;
+  this.BElem = BlockElem;
+  this.IElem = InpElem;
+  
+  this.show = function() { this.BElem.style.display = 'block'; };
+  this.hide = function() { this.BElem.style.display = 'none'; };
+}
+
+/**
+ * object CML_ElemHandler()
+ */
+function CML_ElemHandler(Form)
+{
+  this.F = Form;
+  this.F_Props = new AArray();
+  
+  this.cssInpPropIdPrefix = 'cssp_';
+  this.cssFrmPropIdPrefix = 'div__p_';  // String used to prefix property groups and individuals.
+  this.CElem = null;                    // Current CML_Elem object.
+  this.Elems = new AArray();            // Elements associative array.
+  this.elemsUpdated = false;
+  this.elemNum = 1;
+  
+  this.addElem = function(actualElemName, type, name, isEmpty, css, availPropsStr)
+  {
+    // Element is already defined.
+    if(this.Elems.isset(name))
+      return false;
+    
+    // Element name is not valid.
+    else if(!name.match(/^[a-z0-9_:]+$/i))
+      return false;
+    
+    var AA_AP = new AArray(); // Array of available properties.
+    
+    // Element is valid.
+    if(availPropsStr != null)
+    {
+      var ap = availPropsStr.split(',');
+      for(var i=0, ii=ap.length; i<ii; i++)
+      {
+        if(ap[i].substr(3,1) == '*')
+        {
+          ap[i] = APSC.get(ap[i].substr(0,3)).split(',');
+          for(var j=0, jj=ap[i].length; j<jj; j++)
+            AA_AP.set(ap[i][j], true, true);
+        }
+        else
+        {
+          AA_AP.set(ap[i], true, true);
+        }
+      }
+    }
+    
+    // Add z-index property for Unique elements (ID elements).
+    if(type == 'id')
+      css = css + (css.length != 0 ? ';' : '') + 'z-index:' + this.elemNum++;
+    
+    this.Elems.set(name, new CML_Elem(type, name, css, actualElemName, isEmpty, AA_AP));
+    
+    this.elemsUpdated = false;
+    
+    return true;
+  };
+  
+  /**
+   * bool setCss(object, string)
+   *
+   * @param object caller
+   */
+  this.setCss = function(Caller, pNam)
+  {
+    var pVal = Caller.value;                               // Suggested CSS property value (=not checked).
+    var current_pVal = this.CElem.getCssProp(pNam, true);  // Shortcut to current CSS property value.
+    
+    // ## Check value and add symbols(#), units(px), aliases(transparent) to relevant css properties.
+    switch(pNam)
+    {
+      // Colors:
+      case 'background-color':
+      case 'border-color':
+      case 'color':
+        if(pVal.match(/^[a-f0-9]{6}$/i))
+          pVal = '#' + pVal;
+        else if(pVal.length == 0)
+          pVal = null; // Removes property (not actually removes though, it just won't appear in the css string).
+        else
+        {
+          if(pVal.length >= 6)
+            Caller.value = (current_pVal != null ? current_pVal : '');
+          return false;
+        }
+        break;
+      
+      // Appearence: z-index (positive numbers and not zero)
+      case 'z-index':
+        if(pVal.match(/^[1-9][0-9]{0,2}$/)) { pVal = pVal; }
+        else if(pVal.length == 0)           { pVal = 'auto'; }
+        else                                { Caller.value = (current_pVal != null ? current_pVal : Caller.getAttribute('value')); return false; }
+        break;
+      
+      // Dimensions (positive numbers):
+      case 'height':
+      case 'width':
+        if(pVal.match(/^[0-9]+$/))    { pVal = pVal + 'px'; }
+        else if(pVal.length == 0)     { pVal = 'auto'; }
+        else                          { Caller.value = (current_pVal != null ? current_pVal : Caller.getAttribute('value')); return false; }
+        break;
+      
+      // Positioning (positive and negative numbers):
+      case 'top':
+      case 'left':
+      case 'margin-left':
+      case 'margin-right':
+      case 'margin-top':
+      case 'margin-bottom':
+        if(pVal.match(/^-?[0-9]+$/))  { pVal = pVal + 'px'; }
+        else                        { Caller.value = (current_pVal != null ? current_pVal : Caller.getAttribute('value')); return false; }
+        break;
+      
+      // Other numeric values (only positive numbers):
+      case 'padding':
+      case 'border-width':
+      case 'font-size':
+        if(pVal.match(/^[0-9]+$/))  { pVal = pVal + 'px'; }
+        else                        { Caller.value = (current_pVal != null ? current_pVal : Caller.getAttribute('value')); return false; }
+        break;
+    }
+    
+    this.CElem.setCssProp(pNam, pVal, true);
+    if(this.CElem.availPropsChanged)
+      this.updateGUI(this.CElem.name, true);
+    return true;
+  };
+  
+  /**
+   * void updateGUI(string, bool)
+   */
+  this.updateGUI = function(elemName, force)
+  {
+    // Check if we need to update.
+    if(force !== true && (!this.Elems.isset(elemName) || (this.CElem != null && this.CElem.name == elemName)))
+      return false;
+    
+    // Set current elem.
+    this.CElem = this.Elems.get(elemName);
+    
+    // Reset form.
+    this.F.reset();
+    
+    // ## Load select options (tags (class) and id's).
+    var elems = new Array();
+    elems[0] = new Array();
+    elems[1] = new Array();
+    var SEL_elem = document.getElementById('sel_elem');
+    if(!this.elemsUpdated)
+    {
+      var i=0, j=0;
+      while(AA = this.Elems.foreach('elemName','Elem'))
+      {
+        if(AA.Elem.type == 'id')
+          elems[1][i++] = AA.elemName;
+        else
+          elems[0][j++] = AA.elemName;
+      }
+      
+      elems[0].sort();
+      elems[1].sort();
+      
+      SEL_elem.options.length = 0;
+      var optId = 0;
+      for(i=0; i<elems.length; i++)
+        for(j=0; j<elems[i].length; j++)
+          SEL_elem.options[optId++] = new Option((i == 1 ? '#'+elems[i][j] : '<'+elems[i][j]+'>'), elems[i][j]);
+      
+      this.elemsUpdated = true;
+    }
+    SEL_elem.value = elemName;
+    
+    // ## Import css property values into corresponding form elements.
+    var pNam, pVal, pCont, AA;
+    while(AA = this.CElem.cssProps.foreach('n','v'))
+    {
+      pNam = AA.n.replace(/-/g, '');
+      pVal = AA.v;
+      
+      // CSS property with value null means that it's not available.
+      if(pVal == null)
+        continue;
+      
+      if(pNam.length > 0)
+      {
+        // Remove # from hex-colors.
+        if(pVal.match(RE.numSignHexColor))
+          pVal = pVal.replace(RE.numSignHexColor, RegExp.$1);
+        
+        // Remove units from numbers.
+        else if(pVal.match(RE.units))
+          pVal = pVal.replace(RE.units, RegExp.$1);
+        
+        // Remove string:'transparent' and string:'auto' from color values.
+        else if(pVal == 'transparent' || pVal == 'auto')
+          pVal = '';
+        
+        // Check if we have a container for current property and change it if so is the case.
+        if(this.F_Props.isset(pNam))
+          this.F_Props.get(pNam).IElem.value = pVal;
+      }
+    }
+    
+    // Hide all form properties by default.
+    var AA;
+    while(AA = this.F_Props.foreach('n','FP'))
+      AA.FP.hide();
+    
+    // Show wanted form properties.
+    var AA, pNam;
+    while(AA = this.CElem.availProps.foreach('pNam','isAvail'))
+    {
+      if(AA.isAvail)
+      {
+        pNam = AA.pNam.replace(/-/g, '');
+        this.F_Props.get(pNam).show();
+      }
+    }
+    
+    return true;
+  };
+  
+  // ## Construct routines (constructor):
+  
+  // Import Form CSS Properties.
+  var fpNam, FPInp;
+  var FProps = this.F.getElementsByTagName('div'), FP;
+  for(var i=0, ii=FProps.length; i<ii; i++)
+  {
+    FP = FProps[i];
+    if(FP.id.substr(0,7) != this.cssFrmPropIdPrefix)
+      continue;
+    
+    fpNam = FP.id.substr(7);
+    FPInp = document.getElementById(this.cssInpPropIdPrefix + fpNam);
+    this.F_Props.set(fpNam, new CML_FProp(fpNam, FP, FPInp), false);
+  }
+}
+
+/**
+ * Creates and stores a new custom element.
+ */
+function cml_addElem()
+{
+  var f = document.getElementById('frm_tagm_create');
+  if(RE.elemName.test(f.tagm_name.value) && EH.addElem('div', f.tagm_type.value, f.tagm_name.value, 0, CUSTOM_ELEM_PREPROPS, CUSTOM_ELEM_AVAILPROPS))
+  {
+    EH.updateGUI(f.tagm_name.value);
+    f.reset();
+    tagm_go('tag_manager');
+    CMLC.updatePreview();
+  }
+  else { alert(LANG__elem_name_not_valid); }
+  
+  pcpl(null);
+}
+
+/**
+ * Function for updating concrete css properties (every form input calls this function).
+ */
+function cml_update(Caller, cssPropName, forceCompile)
+{
+  EH.setCss(Caller, cssPropName);
+  
+  // We need to recompile in case of a position-property change since event-listeners must be added/removed (for wysiwyg functionality).
+  if(cssPropName == 'position' || forceCompile == true)
+    CMLC.updatePreview();
+  else
+    CMLC.updateStyle();
+}
+
+
+/************************************************
+ * Compiler Environment
+ ***********************************************/
+
+function pe_htmlentities(s)
+{
+  return s.replace(/</g, '&#60;').replace(/>/g, '&#62;');
+}
+
+/**
+ * CML_Compiler()
+ */
+function CML_Compiler(C,P)
+{
+  this.DataCont  = C;    // Presentation data container (the textarea).
+  this.PrevArea  = P;    // Presentation preview area (div-block).
+  
+  this.DebugElem = document.createElement('div');
+  this.DebugElem.setAttribute('id', 'pe_debug');
+  
+  // ## Compiler trackers:
+  this.tagStack     = new List();
+  this.openTags     = new Array();
+  this.regIds       = new AArray();
+  this.errors       = new List();
+  this.hasBodyStart = false;
+  this.hasBodyEnd   = false;
+  this.displaysErr  = false;
+  
+  // ## CSS compiler data.
+  this.prepContentToks = new List();
+    // Example: List.push(new Array(Mixed:<Element/Compiled string/Plain string>,
+    //                              Bool:<Is compiled>),
+    //                              String:<Attributes>,
+    //                              AArray:<Additional css properties reference>);
+  
+  /**
+   * void resetEnv();
+   */
+  this.resetEnv = function()
+  {
+    this.displaysErr = false;
+    this.tagStack.clear();
+    this.openTags = new Array();
+    this.regIds   = new AArray();
+    this.errors.clear();
+    this.hasBodyStart = false;
+    this.hasBodyEnd   = false;
+    this.prepContentToks.clear();
+  };
+  
+  /**
+   * bool openTag(CML_Elem)
+   */
+  this.openTag = function(cml)
+  {
+    if(typeof(cml) == 'undefined') return false;
+    if(cml.isEmpty) return true;
+    
+    this.tagStack.push(cml.name);
+    
+    if(typeof(this.openTags[cml.name]) == 'undefined')
+      this.openTags[cml.name] = 1;
+    else
+      this.openTags[cml.name]++;
+    
+    return true;
+  };
+  
+  /**
+   * bool registerId(string)
+   *
+   * Warning: typeof(this.regIds['some']) (and maybe other keys) will return 'function' in firefox. Therefore we're going to prefix these.
+   * _OR_ use AArray object instead (as we do just now, and yes, it is a change)...
+   */
+  this.registerId = function(id)
+  {
+    if(!this.regIds.isset(id))
+    {
+      this.regIds.set(id, 1);
+      return true;
+    }
+    else
+    {
+      this.err(LANG__err_id_already_used, new Array(id));
+      return false;
+    }
+  };
+  
+  /**
+   * bool tagIsOpen(string)
+   */
+  this.tagIsOpen = function(n)
+  {
+    return (typeof(this.openTags[n]) != 'undefined' && this.openTags[n] > 0);
+  };
+  
+  /**
+   * bool closeTag(CML_Elem)
+   */
+  this.closeTag = function(cml)
+  {
+    if(typeof(cml) == 'undefined') return false;
+    
+    // User attempted to end an empty tag.
+    if(cml.isEmpty)
+    {
+      this.err(LANG__err_empty_tag_no_end, new Array(cml.name));
+      return false;
+    }
+    else if(this.tagIsOpen(cml.name) && this.tagStack.getLast() == cml.name)
+    {
+      this.tagStack.pop();
+      this.openTags[cml.name]--;
+      return true;
+    }
+    else if(!this.tagIsOpen(cml.name))
+    {
+      this.err(LANG__err_unnecessary_end_tag, new Array(cml.name));
+      return false;
+    }
+    else
+    {
+      this.err(LANG__err_expecting_end_tag, new Array(this.tagStack.getLast(), cml.name));
+      return false;
+    }
+  };
+  
+  /**
+   * void err(String, String[])
+   */
+  this.err = function(msg, vals)
+  {
+    var re;
+    for(var i=0, ii=vals.length; i<ii; i++)
+    {
+      re = new RegExp('\\$'+i,'g');
+      msg = msg.replace(re, '<span class="ped_msg_highlight">'+vals[i]+'</span>');
+      msg = msg.replace(/\n/g, '<br />');
+    }
+    this.errors.push(msg);
+  };
+  
+  /**
+   * bool hasError()
+   */
+  this.hasError = function()
+  {
+    return (!this.errors.isEmpty());
+  };
+  
+  /**
+   * void dumpErrors()
+   * Prints out max n stored errors.
+   */
+  this.dumpErrors = function(n)
+  {
+    var msg, msgs='';
+    while(n-- > 0 && (msg = this.errors.shift()) !== false)
+      msgs += '<div class="ped_msg"><span class="ped_msg_prefix">#</span> ' + msg + '</div>';
+    this.DebugElem.innerHTML = msgs;
+    this.PrevArea.appendChild(this.DebugElem);
+  };
+  
+  /**
+   * void updatePreview(c)
+   * 
+   * @param string c  # String to update content with; if none is specified a new string will be compiled using default data input.
+   */
+  this.updatePreview = function(c)
+  {
+    if(c == null)
+      c = this.makeCompile(true);
+    
+    if(!this.hasError())
+    {
+      this.PrevArea.innerHTML = c;
+    }
+    else
+    {
+      this.PrevArea.innerHTML = '';
+      this.dumpErrors(1);
+      this.displaysErr = true;
+    }
+  };
+  
+  /**
+   * void updateStyle()
+   * Uses an array on the following format to make a fast recompile:
+   *  List(new Array(0 => Mixed:<Element/Compiled string/Plain string>,
+                     1 => Bool:<Is compiled>),
+                     2 => String:<Attributes>,
+                     3 => Array(AArray:<Class css props>,
+                                AArray:<ID css props>));
+   */
+  this.updateStyle = function()
+  {
+    if(!this.displaysErr)
+    {
+      var c = '';
+      var joinedProps;
+      var ctok;
+      this.prepContentToks.reset();
+      while(this.prepContentToks.hasNext())
+      {
+        ctok = this.prepContentToks.current();
+        
+        // String is not compiled.
+        if(!ctok[1])
+          c += ctok[0].compileStartElem(ctok[2], ctok[3]);
+        // String is compiled.
+        else
+          c += ctok[0];
+        
+        this.prepContentToks.next();
+      }
+      
+      this.updatePreview(c);
+    }
+  };
+  
+  /**
+   * string makeCompile(bool)
+   */
+  this.makeCompile = function(isPreview)
+  {
+    this.resetEnv();
+    var c = this.DataCont.value;
+    
+    c = c.replace(/\|/gi, '&#124;');   // Replace all pipe characters with corresponding HTML entities (since these are used for separation below).
+  	c = c.replace(/<{1}/gi, '|<');     // Mark all < characters.
+  	c = c.replace(/>{1}/gi, '>|');     // Mark all > characters.
+    
+  	var re_attr = /\s?([a-z_][a-z0-9_]*=\".*?\")\s?/gi;
+  	
+    var isEndTag=false, isEmpty, tagFound=false, attrsFound=false;
+    var tagName, attrs, attr, attrStr='', attrNam, attrVal;
+    var id_attr = null;
+    var __ref_idCssProps;
+    var compiled_str = '';
+    var compiledElem;
+    var attrList = new List(); // Attribute list for storage of parsed attribute names and values.
+    var E, t; // Shortcuts: E=EH.elems[tagName], t=tokens[i]
+    var tokens = c.split(/\|{1,2}/);
+    for(var i=0, ii=tokens.length; i<ii; i++)
+    {
+      t = tokens[i];
+      
+      // Reset current properties.
+      isEndTag = false;
+      isEmpty = false;
+      tagFound = false;
+      attrsFound = false;
+      attrStr = '';
+      id_attr = null;
+      compiledElem = null;
+      __ref_idCssProps = null;
+      
+      if(t.substr(0,1) == '<' && t.substr(t.length-1,1) == '>')
+      {
+        tagName = t.substr(1, t.length-2);
+        if(isEndTag = RE.endTag.test(tagName))
+          tagName = RegExp.$1;
+        if(isEmpty = RE.emptyTag.test(tagName))
+          tagName = RegExp.$1;
+        
+        // Check if we have any attributes and separate them from tagName.
+        if(tagName.indexOf(' ') > 0)
+        {
+          // ## Separate tag name from attribute string.
+          attrs = tagName.substr(tagName.indexOf(' ')+1);
+          if(attrs.length > 0)
+          {
+            attrs = attrs.replace(re_attr, '$1|');
+            attrs = attrs.substr(0, attrs.length-1).split('|');
+            tagName = tagName.substr(0, tagName.indexOf(' '));
+            attrsFound = true;
+          }
+        }
+        
+        E = EH.Elems.get(tagName); // Update shortcut to current element.
+        
+        // If we have a body start-tag we can continue.
+        if(this.hasBodyStart)
+        {
+          // Start-tag found:
+          if(!isEndTag && this.openTag(E))
+          {
+            // Check that we have a consequence with isEmpty and E.isEmpty (either both fale or both true).
+            if((!E.isEmpty && isEmpty) || (E.isEmpty && !isEmpty)) // This should work as the xor-operator...
+            {
+              if(!E.isEmpty)
+                this.err(LANG__err_tag_not_empty, new Array(tagName));
+              else
+                this.err(LANG__err_tag_empty, new Array(tagName));
+              break;
+            }
+            
+            tagFound = true;
+            
+            if(attrsFound)
+            {
+              // We have attributes to parse.
+              
+              for(var attr_i=0, attr_len=attrs.length; attr_i<attr_len; attr_i++)
+              {
+                attr = attrs[attr_i];
+                if(!attr.match(re_attr)) continue;
+                
+                attrNam = attr.substr(0, attr.indexOf('='));
+                attrVal = attr.substring(attr.indexOf('=')+2, attr.lastIndexOf('"'));
+                
+                switch(tagName)
+                {
+                  // Skip elements where we don't allow attributes:
+                  case 'b':
+                  case 'i':
+                  case 's':
+                  case 'u':
+                  case 'center':
+                  case 'right':
+                  case 'big':
+                  case 'br':
+                    break;
+                  
+                  case 'a':
+                    if(isPreview)
+                    {
+                      attrList.push(new Array('href', 'javascript:alert(\'Link to: '+attrVal+'\');'));
+                    }
+                    else
+                    {
+                      switch(attrNam)
+                      {
+                        case 'href':
+                          if(attrVal.length > 3)
+                            attrList.push(new Array('href', attrVal));
+                      }
+                      attrList.push(new Array('target','_new'));
+                    }
+                    break;
+                  
+                  case 'user':
+                    if(isPreview)
+                      attrList.push(new Array('href', 'javascript:alert(\''+LANG__link_to_user.replace(/\$0/g, attrVal)+'\');'));
+                    else
+                      attrList.push(new Array('href','/usersrch.php?unam='+attrVal)); // Non-working url right now...
+                    break;
+                  
+                  default:
+                    switch(attrNam)
+                    {
+                      case 'id':
+                        if(this.registerId(attrVal))
+                        {
+                          // The ID has an object related to it.
+                          if(EH.Elems.isset(attrVal))
+                          {
+                            var E_id = EH.Elems.get(attrVal);
+                            
+                            // Make the id-element inherit its properties fron its parent (class-element, or actually tag element; <class_name>),
+                            // although we don't want to inherit anything if the properties of the ID-element has been changed before.
+                            if(!E_id.touched)
+                              E_id.cssProps = new ObjClone(E.cssProps); // Copy css properties from parent element.
+                            
+                            if(isPreview)
+                              __ref_idCssProps = E_id.cssProps; // Save css property reference for further use below.
+                          }
+                          
+                          // Register id attribute.
+                          attrList.push(new Array('id', CSS_RULE_PREFIX + attrVal));
+                          
+                          // Save ID temporarily for possible use below.
+                          id_attr = attrVal;
+                        }
+                        break;
+                    }
+                }
+              }
+            }
+            
+            if(isPreview)
+            {
+              // Add attributes used in preview:
+              
+              switch(tagName)
+              {
+                // Skip non-relevant elements.
+                case 'b':
+                case 'i':
+                case 's':
+                case 'u':
+                case 'center':
+                case 'right':
+                case 'big':
+                case 'br':
+                  attrList.push(new Array('onclick', 'event.cancelBubble=true;'));
+                  break;
+                
+                case 'user':
+                  attrList.push(new Array('onmouseover', 'this.style.cssText=EH.Elems.get(\'user:hover\').getCssStr();'));
+                  attrList.push(new Array('onmouseout', 'this.style.cssText=EH.Elems.get(\'user\').getCssStr();'));
+                  attrList.push(new Array('onclick', 'event.cancelBubble=true;'));
+                  break;
+                
+                case 'a':
+                  attrList.push(new Array('onmouseover', 'this.style.cssText=EH.Elems.get(\'a:hover\').getCssStr();'));
+                  attrList.push(new Array('onmouseout', 'this.style.cssText=EH.Elems.get(\'a\').getCssStr();'));
+                  attrList.push(new Array('onclick', 'event.cancelBubble=true;'));
+                  break;
+                
+                default:
+                  if(id_attr != null)
+                  {
+                    if(E_id.getCssProp('position') == 'absolute')
+                    {
+//                      attrList.push(new Array('onmousedown',  'Box.startMove(event,this,\''+id_attr+'\');'));
+//                      attrList.push(new Array('onmouseup',    'Box.endMove();'));
+                      attrList.push(new Array('onmouseover',    'Box.detectOver(this,\''+id_attr+'\');'));
+                      attrList.push(new Array('onmouseout',     'Box.detectOut();'));
+                    }
+                    attrList.push(new Array('onclick',        'EH.updateGUI(\''+id_attr+'\');event.cancelBubble=true;'));
+                    attrList.push(new Array('title',          '&#60;' + tagName + ' id=&#34;' + id_attr + '&#34;&#62;'));
+                  }
+                  else
+                  {
+                    if(E.getCssProp('position') == 'absolute')
+                    {
+//                      attrList.push(new Array('onmousedown',  'Box.startMove(event,this,\''+id_attr+'\');'));
+//                      attrList.push(new Array('onmouseup',    'Box.endMove();'));
+                    }
+                    attrList.push(new Array('onclick', 'EH.updateGUI(\''+tagName+'\');event.cancelBubble=true;'));
+                    attrList.push(new Array('title', '&#60;'+tagName+'&#62;'));
+                  }
+              }
+            }
+            
+            // Build attribute string.
+            while((attr = attrList.pop()) !== false)
+              attrStr += ' ' + attr[0] + '="' + attr[1] + '"';
+            
+            // Store as decompiled content token.
+            this.prepContentToks.push(new Array(E, false, attrStr, new Array(E.cssProps, __ref_idCssProps)));
+            compiled_str += isPreview ? E.compileStartElem(attrStr, this.prepContentToks.getLast()[3]) : E.compileStartElem(attrStr);
+          }
+          // End-tag found:
+          else if(this.closeTag(E) && !E.isEmpty)
+          {
+            tagFound = true;
+            compiledElem = E.compileEndElem();
+            this.prepContentToks.push(new Array(compiledElem, true, null, null));
+            compiled_str += compiledElem;
+            
+            if(tagName == 'body')
+            {
+              this.hasBodyEnd = true;
+              break;
+            }
+          }
+        }
+        
+        // We have either the <body> or the </body> tag.
+        else if(tagName == 'body')
+        {
+          if(this.hasBodyStart)
+            this.err(LANG__err_too_many_body_start);
+          else
+            this.openTag(E);
+          
+          attrStr = ' onclick="EH.updateGUI(\''+tagName+'\');"';
+          this.prepContentToks.push(new Array(E, false, attrStr, new Array(E.cssProps, null)));
+          compiled_str += E.compileStartElem(attrStr, this.prepContentToks.getLast()[3]);
+          this.hasBodyStart = true;
+          
+          continue;
+        }
+        
+        // Check if we have a <body> tag, if not: store error message and continue.
+        else
+        {
+          this.err(LANG__err_missing_body_start);
+          continue;
+        }
+      }
+      
+      // Plain text.
+      if(!tagFound && this.hasBodyStart)
+      {
+        var tmp = pe_htmlentities(t);
+        this.prepContentToks.push(new Array(tmp, true, null, null));
+        compiled_str += tmp;
+      }
+    }
+    
+    // Add token separators if we're going to send this to the PHP-validator.
+    if(!isPreview)
+      compiled_str += '|';
+    
+    return compiled_str;
+  };
+  
+  this.DataCont.onkeyup = function(e) { pcpl(new Event(e)) };
+  
+  return this;
+}
+
+
+/* ###
+ * ### WYSIWYG-functions:
+ * ### */
+
+
+/**
+ * Object BoxMover()
+ * !! Assumes that the one and only instance of this class is called 'Box'.
+ */
+function BoxMover()
+{
+  this.initX;
+  this.initY;
+  
+  this.offsetX;
+  this.offsetY;
+  this.objX;
+  this.objY;
+  this.pX;
+  this.pY;
+  
+  this.Elem;
+  this.HtmlObj;
+  this.Ev;
+  this.doMove = false;
+  this.hasMoved = false;
+  
+  this.minX = -1;
+  this.minY = -1;
+  this.maxX;
+  this.maxY;
+  
+  this.ccElem = document.createElement('div'); // @var ELEM  - Content Cover Element.
+  this.ccElem.style.cssText = 'position:absolute;top:0px;left:0px;width:90%;height:90%;background:#FF00FF;opacity:0.6';
+  this.ccElem.onmouseover = function() { Box.ccDetectOver(); };
+  this.ccElem.onmouseout = function() { Box.ccDetectOut(); };
+  this.ccElem.onmouseup = function() { Box.endMove(); };
+  
+  this.ccIsOver = false;
+  this.ccIsVisible = false;
+  this.ccDetectOver = function(e) { this.ccIsOver = true; };
+  this.ccDetectOut = function() { this.ccIsOver = false; };
+  
+  this.detectOver = function(o, cml_nam)
+  {
+    if(!this.ccIsVisible)
+    {
+      this.ccIsVisible = true;
+      this.HtmlObj = o;
+      this.Elem = EH.Elems.get(cml_nam);
+      this.HtmlObj.appendChild(this.ccElem);
+    }
+  };
+  
+  this.detectOut = function()
+  {
+    if(this.ccIsVisible && !this.ccIsOver)
+    {
+      this.HtmlObj.removeChild(this.ccElem);
+      this.ccIsVisible = false;
+      this.ccIsOver = false;
+    }
+  };
+  
+  this.startMove = function(e, o, cml_nam)
+  {
+    if(this.doMove)
+    {
+      this.resetEndMove();
+      return;
+    }
+    
+    this.Ev = new Event(e);
+    this.Ev.ref.cancelBubble = true;
+    
+    this.maxX = parseInt(EH.Elems.get('body').getCssProp('width'))-1;
+    this.maxY = parseInt(EH.Elems.get('body').getCssProp('height'))-1;
+    
+    this.objX = this.Ev.objPosX;
+    this.objY = this.Ev.objPosY;
+    
+    this.initX = parseInt(this.Elem.getCssProp('left'));
+    this.initY = parseInt(this.Elem.getCssProp('top'));
+    
+    // A different (and the best) way to calculate the box position in this case (which is relative to the starting point):
+    this.offsetX = this.initX - (this.Ev.pageOffsetX);
+    this.offsetY = this.initY - (this.Ev.pageOffsetY);
+    
+    this.doMove = true;
+    this.hasMoved = false;
+    
+//    EH.updateGUI(this.Elem.name, true);
+  };
+  
+  this.moveTo = function(x,y)
+  {
+    if(this.doMove)
+    {
+      this.pX = Math.min(this.maxX, Math.max(this.minX, this.offsetX + x));
+      this.pY = Math.min(this.maxY, Math.max(this.minY, this.offsetY + y));
+      this.HtmlObj.style.left = (this.pX) + 'px';
+      this.HtmlObj.style.top = (this.pY) + 'px';
+      this.hasMoved = true;
+      if(B.ie) document.getElementById('inp_HEX').focus(); // Without this, moving around will cause everything in the pointer's way to be selected.
+    }
+  };
+  
+  /**
+   * Consider this a panic function, used to reset and end the current move session.
+   */
+  this.resetEndMove = function(e)
+  {
+    if(this.doMove)
+    {
+      this.pX = this.initX;
+      this.pY = this.initY;
+      this.end();
+    }
+  };
+  
+  this.endMove = function()
+  {
+    if(!this.doMove) // Make sure this function is performed once.
+      return;
+    
+    this.doMove = false;
+    
+    // Change position if box was moved.
+    if(this.hasMoved)
+    {
+      this.Elem.setCssProp('top', this.pY + 'px');
+      this.Elem.setCssProp('left', this.pX + 'px');
+      this.HtmlObj.style.left = (this.pX) + 'px';
+      this.HtmlObj.style.top = (this.pY) + 'px';
+    }
+  };
+}

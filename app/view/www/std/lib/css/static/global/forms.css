@@ -1,0 +1,28 @@
+/* ### STATIC ### */
+
+select { border-width:1px; font-family:verdana,sans-serif,helvetica; font-size:10px; text-align:left; }
+option { text-align:left; }
+option.init { text-align:left; } /* Initial value - The defaul value, zero or whatever is considered "invalid". */
+
+form .flabel, .frm_ftitle { font-size:10px; }
+form .fcomment { font-style:italic; }
+
+/* Form notes; div box */
+form div.note {  }
+  form div.noteh { padding-left:3px; }
+  form div.notec { padding:3px; border-width:1px; }
+
+/* Input:text, Input:password, textarea */
+/* Note: w3-boxmodel-offset: width:2+2px, height:2+2px */
+input.inp_t, input.inp_p, input.inp_f, textarea { border-width:1px; font-family:verdana,sans-serif,helvetica; font-size:10px; padding:1px; }
+
+/* Radio input */
+img.inp_r { vertical-align:bottom; }
+span.inp_r_label { vertical-align:bottom; padding-left:3px; margin-right:10px; }
+
+/* Input with type=image */
+input.inp_i { height:18px; }
+
+/* Form wrapper */
+table.frm { width:100%; padding:0px; border-width:1px; margin-bottom:10px; border-spacing:1px; border-collapse:separate; }
+td.frm { padding-left:5px; padding-right:10px; padding-top:6px; padding-bottom:5px; border-width:1px; }

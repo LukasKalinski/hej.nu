@@ -1,0 +1,8 @@
+Subject:Registration complete!|From:robot@hej.nu>
+Welcome!
+
+Your username is: {&username}
+Your password is: {&password}
+
+To activate your account please visit the following url:
+{&url}

@@ -1,0 +1,1 @@
+add_onload_func(function(){parent.secNavSet('user','main','userid');});

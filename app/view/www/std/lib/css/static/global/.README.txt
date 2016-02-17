@@ -1,0 +1,5 @@
+This folder contains static dimension and layout css. This means:
+
+1. Backgrounds, colors, styles (font-style, border-style, text-decoration, etc, etc...) are only set as defaults; they 
+   might and propably will be overwritten.
+2. Typical static properties: font-sizes, box-dimensions, margins, paddings, positioning, display

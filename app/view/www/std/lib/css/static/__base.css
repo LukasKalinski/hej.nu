@@ -1,0 +1,15 @@
+/* ### STATIC ### */
+
+/* Set element defaults: */
+body { font-family:verdana,sans-serif,helvetica; font-size:10px; cursor:default; }
+img { border-style: none; }
+table { width:100%; border-collapse:collapse; }
+td { margin:0px; padding:0px; }
+br { font-size:10px; }
+
+/* User photos */
+img.uphotoL { width:300px; height:390px; }
+img.uphotoM, div.uphotoM { width:[gecko=98|default=100]px; height:[gecko=128|default=130]px; border:1px solid black; }
+img.uphotoS { width:40px; height:52px; }
+
+.hand { cursor: [msie=hand|default=pointer]; }
