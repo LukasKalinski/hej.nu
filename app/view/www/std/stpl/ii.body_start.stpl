@@ -13,4 +13,3 @@
     {ph_isset &page_title}
       <div id="chead"><div id="chead_title">{&page_title}</div></div>
     {/ph_isset}
-</html>
